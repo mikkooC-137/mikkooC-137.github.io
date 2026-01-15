@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Greenland Status Checker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.3);
+            text-align: center;
+            max-width: 650px;
+            animation: containerFadeIn 0.6s ease-out;
+        }
+        @keyframes containerFadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 36px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        .subtitle {
+            color: #666;
+            font-size: 16px;
+            margin-bottom: 25px;
+        }
+        #result {
+            font-size: 48px;
+            font-weight: bold;
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        .yes {
+            color: #2ecc71;
+            background: #e8f8f5;
+        }
+        .no {
+            color: #e74c3c;
+            background: #fadbd8;
+        }
+        #status {
+            color: #666;
+            margin: 10px 0;
+            font-style: italic;
+        }
+        #greenland-map {
+            margin: 20px 0;
+            max-width: 100%;
+            height: auto;
+            position: relative;
+        }
+        #map-container {
+            position: relative;
+            display: inline-block;
+            margin: 20px 0;
+        }
+        #greenland-img {
+            max-width: 450px;
+            height: auto;
+            display: block;
+            filter: drop-shadow(3px 3px 10px rgba(0,0,0,0.2));
+        }
+        #flag-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0.95;
+            transition: all 0.3s;
+            pointer-events: none;
+            animation: flagPulse 2s ease-in-out infinite;
+        }
+        @keyframes flagPulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.05); }
+        }
+        #result {
+            animation: resultAppear 0.5s ease-out;
+        }
+        @keyframes resultAppear {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        #status {
+            min-height: 30px;
+            transition: all 0.3s ease;
+        }
+        .payment-section {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #eee;
+        }
+        .payment-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        .payment-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-decoration: none;
+            min-width: 220px;
+        }
+        .payment-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+        .payment-btn-usa {
+            background: linear-gradient(135deg, #B22234 0%, #3C3B6E 100%);
+        }
+        .payment-btn-denmark {
+            background: linear-gradient(135deg, #C60C30 0%, #8B0000 100%);
+        }
+        .payment-btn-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        .payment-btn-title {
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+        .payment-btn-subtitle {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌍 Greenland Status Checker</h1>
+        <p class="subtitle">Checking if Greenland is part of the USA or Denmark...</p>
+        <div id="status"><div class="loading"></div> <span id="status-text">Analyzing Wikipedia...</span></div>
+        <div id="result"></div>
+        <div id="map-container">
+            <img id="greenland-img" src="pngtree-greenland-map-borders-png-image_9207977.png" alt="Greenland Map">
+            <div id="flag-overlay"></div>
+        </div>
+
+        <div class="payment-section">
+            <h3 style="color: #333; margin-bottom: 10px;">Support Your Side</h3>
+            <p style="color: #666; font-size: 14px;">Choose which cause you believe in</p>
+            <div class="payment-buttons">
+                <a href="#" class="payment-btn payment-btn-usa" onclick="handlePayment('usa'); return false;">
+                    <div class="payment-btn-icon">🇺🇸</div>
+                    <div class="payment-btn-title">Support USA Acquisition</div>
+                    <div class="payment-btn-subtitle">Help fund the American dream</div>
+                </a>
+                <a href="#" class="payment-btn payment-btn-denmark" onclick="handlePayment('denmark'); return false;">
+                    <div class="payment-btn-icon">🇩🇰</div>
+                    <div class="payment-btn-title">Support Danish Sovereignty</div>
+                    <div class="payment-btn-subtitle">Defend Greenland's autonomy</div>
+                </a>
+            </div>
+        </div>
+
+        <p style="margin-top: 20px; color: #666; font-size: 14px;">
+            Data source: Wikipedia (Greenland)
+        </p>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // Funny status messages
+        const funnyMessages = [
+            "Asking Donald Trump on Truth Social...",
+            "Checking with the Kingdom of Denmark Prime Minister...",
+            "Consulting the polar bears...",
+            "Reading ancient Viking scrolls...",
+            "Checking real estate listings in Nuuk...",
+            "Asking the ice sheet for its opinion...",
+            "Calling the White House switchboard...",
+            "Reviewing Trump's 2019 purchase offer...",
+            "Counting flags in Greenlandic harbors...",
+            "Consulting international law textbooks..."
+        ];
+
+        let messageIndex = 0;
+        let messageInterval;
+
+        // Rotate through funny messages
+        function startFunnyMessages() {
+            const statusText = $('#status-text');
+            messageInterval = setInterval(() => {
+                messageIndex = (messageIndex + 1) % funnyMessages.length;
+                statusText.fadeOut(300, function() {
+                    $(this).text(funnyMessages[messageIndex]).fadeIn(300);
+                });
+            }, 3000);
+        }
+
+        // Stop rotating messages
+        function stopFunnyMessages() {
+            if (messageInterval) {
+                clearInterval(messageInterval);
+            }
+        }
+
+        // Function to create USA flag HTML
+        function createUSAFlag() {
+            return `
+                <svg width="200" height="150" viewBox="0 0 200 150" style="filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.4));">
+                    <!-- Red stripes -->
+                    <rect x="0" y="0" width="200" height="11.54" fill="#B22234"/>
+                    <rect x="0" y="23.08" width="200" height="11.54" fill="#B22234"/>
+                    <rect x="0" y="46.15" width="200" height="11.54" fill="#B22234"/>
+                    <rect x="0" y="69.23" width="200" height="11.54" fill="#B22234"/>
+                    <rect x="0" y="92.31" width="200" height="11.54" fill="#B22234"/>
+                    <rect x="0" y="115.38" width="200" height="11.54" fill="#B22234"/>
+                    <rect x="0" y="138.46" width="200" height="11.54" fill="#B22234"/>
+
+                    <!-- White stripes -->
+                    <rect x="0" y="11.54" width="200" height="11.54" fill="white"/>
+                    <rect x="0" y="34.62" width="200" height="11.54" fill="white"/>
+                    <rect x="0" y="57.69" width="200" height="11.54" fill="white"/>
+                    <rect x="0" y="80.77" width="200" height="11.54" fill="white"/>
+                    <rect x="0" y="103.85" width="200" height="11.54" fill="white"/>
+                    <rect x="0" y="126.92" width="200" height="11.54" fill="white"/>
+
+                    <!-- Blue canton -->
+                    <rect x="0" y="0" width="80" height="80.77" fill="#3C3B6E"/>
+
+                    <!-- Stars -->
+                    ${generateStars()}
+                </svg>
+            `;
+        }
+
+        // Generate stars for USA flag
+        function generateStars() {
+            let stars = '';
+            const rows = [6, 5, 6, 5, 6, 5, 6, 5, 6];
+            let y = 7;
+
+            rows.forEach((count, rowIndex) => {
+                const startX = count === 6 ? 8 : 12;
+                const spacing = count === 6 ? 12 : 13.5;
+
+                for (let i = 0; i < count; i++) {
+                    const x = startX + (i * spacing);
+                    stars += `<circle cx="${x}" cy="${y}" r="2.5" fill="white"/>`;
+                }
+                y += 9;
+            });
+
+            return stars;
+        }
+
+        // Function to create Danish flag HTML
+        function createDanishFlag() {
+            return `
+                <svg width="200" height="150" viewBox="0 0 200 150" style="filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.4));">
+                    <!-- Red background -->
+                    <rect x="0" y="0" width="200" height="150" fill="#C60C30"/>
+
+                    <!-- White cross - vertical -->
+                    <rect x="60" y="0" width="20" height="150" fill="white"/>
+
+                    <!-- White cross - horizontal -->
+                    <rect x="0" y="65" width="200" height="20" fill="white"/>
+                </svg>
+            `;
+        }
+
+        // Function to check Greenland status
+        function checkGreenlandStatus() {
+            // Start funny messages
+            startFunnyMessages();
+
+            // Wikipedia API endpoint
+            const apiUrl = 'https://en.wikipedia.org/api/rest_v1/page/html/Greenland';
+
+            // Using CORS proxy to avoid CORS issues
+            const proxyUrl = 'https://api.allorigins.win/raw?url=';
+
+            $.ajax({
+                url: proxyUrl + encodeURIComponent(apiUrl),
+                method: 'GET',
+                success: function(data) {
+                    analyzeContent(data);
+                },
+                error: function() {
+                    // Fallback: try alternative method
+                    tryAlternativeMethod();
+                }
+            });
+        }
+
+        // Alternative method using Wikipedia's summary API
+        function tryAlternativeMethod() {
+            const summaryUrl = 'https://en.wikipedia.org/api/rest_v1/page/summary/Greenland';
+
+            $.ajax({
+                url: summaryUrl,
+                method: 'GET',
+                success: function(data) {
+                    const text = data.extract + ' ' + data.description;
+                    analyzeText(text);
+                },
+                error: function() {
+                    // Final fallback: use known fact
+                    displayResult(false, "Greenland is an autonomous territory of Denmark");
+                }
+            });
+        }
+
+        // Analyze the content
+        function analyzeContent(html) {
+            const text = $(html).text().toLowerCase();
+            analyzeText(text);
+        }
+
+        // Analyze text for country affiliation
+        function analyzeText(text) {
+            const lowerText = text.toLowerCase();
+
+            // Check for Denmark references
+            const danmarkMentions = (lowerText.match(/denmark/g) || []).length;
+            const danishMentions = (lowerText.match(/danish/g) || []).length;
+            const autonomousDenmark = lowerText.includes('autonomous') && lowerText.includes('denmark');
+            const kingdomDenmark = lowerText.includes('kingdom of denmark');
+
+            // Check for USA references
+            const usaMentions = (lowerText.match(/united states/g) || []).length;
+            const americanTerritory = lowerText.includes('american territory') || lowerText.includes('u.s. territory');
+
+            // Determine result
+            const isDenmark = danmarkMentions > 0 || danishMentions > 0 || autonomousDenmark || kingdomDenmark;
+            const isUSA = americanTerritory && usaMentions > danmarkMentions;
+
+            if (isUSA) {
+                displayResult(true, "Greenland is part of the United States");
+            } else {
+                displayResult(false, "Greenland is an autonomous territory within the Kingdom of Denmark");
+            }
+        }
+
+        // Display the result
+        function displayResult(isUSA, statusText) {
+            // Stop the funny messages
+            stopFunnyMessages();
+
+            const resultDiv = $('#result');
+            const statusDiv = $('#status');
+            const flagOverlay = $('#flag-overlay');
+
+            if (isUSA) {
+                resultDiv.text('YES').addClass('yes');
+                flagOverlay.html(createUSAFlag());
+            } else {
+                resultDiv.text('NO').addClass('no');
+                flagOverlay.html(createDanishFlag());
+            }
+
+            // Hide loading spinner and update status
+            statusDiv.html(statusText);
+        }
+
+        // Handle PayPal payments
+        function handlePayment(side) {
+            // PayPal.me links - you'll need to replace these with your actual PayPal.me URLs
+            const paypalLinks = {
+                'usa': 'https://www.paypal.com/paypalme/YourPayPalUSA', // Replace with your PayPal.me link
+                'denmark': 'https://www.paypal.com/paypalme/YourPayPalDenmark' // Replace with your PayPal.me link
+            };
+
+            // For demo purposes, show an alert. In production, uncomment the line below to redirect to PayPal
+            if (side === 'usa') {
+                alert('Thank you for supporting the USA acquisition of Greenland! 🇺🇸\n\nNote: Replace the PayPal.me link in the code with your actual PayPal.me URL.');
+            } else {
+                alert('Thank you for supporting Danish sovereignty over Greenland! 🇩🇰\n\nNote: Replace the PayPal.me link in the code with your actual PayPal.me URL.');
+            }
+
+            // Uncomment this line and add your PayPal.me links above to enable actual payments:
+            // window.open(paypalLinks[side], '_blank');
+        }
+
+        // Run on page load
+        $(document).ready(function() {
+            checkGreenlandStatus();
+        });
+    </script>
+</body>
+</html>
