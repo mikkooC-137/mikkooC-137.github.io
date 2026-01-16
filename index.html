@@ -135,7 +135,9 @@
             cursor: pointer;
             transition: transform 0.2s, box-shadow 0.2s;
             text-decoration: none;
-            min-width: 220px;
+            width: 200px;
+            min-width: 200px;
+            max-width: 200px;
         }
         .payment-btn:hover {
             transform: translateY(-3px);
@@ -146,6 +148,9 @@
         }
         .payment-btn-denmark {
             background: linear-gradient(135deg, #C60C30 0%, #8B0000 100%);
+        }
+        .payment-btn-greenland {
+            background: linear-gradient(135deg, #D00C27 0%, #FFFFFF 100%);
         }
         .payment-btn-icon {
             font-size: 32px;
@@ -159,6 +164,14 @@
         .payment-btn-subtitle {
             font-size: 12px;
             opacity: 0.9;
+        }
+        .payment-btn-counter {
+            margin-top: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            padding: 5px 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
         }
         .loading {
             display: inline-block;
@@ -194,11 +207,19 @@
                     <div class="payment-btn-icon">🇺🇸</div>
                     <div class="payment-btn-title">Support USA Acquisition</div>
                     <div class="payment-btn-subtitle">Help fund the American dream</div>
+                    <div class="payment-btn-counter" id="counter-usa">0 supporters</div>
+                </a>
+                <a href="#" class="payment-btn payment-btn-greenland" onclick="handlePayment('greenland'); return false;">
+                    <div class="payment-btn-icon">🇬🇱</div>
+                    <div class="payment-btn-title">Greenland Independence</div>
+                    <div class="payment-btn-subtitle">Support true self-determination</div>
+                    <div class="payment-btn-counter" id="counter-greenland">0 supporters</div>
                 </a>
                 <a href="#" class="payment-btn payment-btn-denmark" onclick="handlePayment('denmark'); return false;">
                     <div class="payment-btn-icon">🇩🇰</div>
                     <div class="payment-btn-title">Support Danish Sovereignty</div>
                     <div class="payment-btn-subtitle">Defend Greenland's autonomy</div>
+                    <div class="payment-btn-counter" id="counter-denmark">0 supporters</div>
                 </a>
             </div>
         </div>
@@ -405,28 +426,51 @@
             statusDiv.html(statusText);
         }
 
-        // Handle PayPal payments
+        // Initialize counters from localStorage
+        function initializeCounters() {
+            const sides = ['usa', 'greenland', 'denmark'];
+            sides.forEach(side => {
+                const count = localStorage.getItem(`counter-${side}`) || 0;
+                updateCounterDisplay(side, count);
+            });
+        }
+
+        // Update counter display
+        function updateCounterDisplay(side, count) {
+            const counterElement = $(`#counter-${side}`);
+            const displayCount = parseInt(count);
+            const plural = displayCount === 1 ? 'supporter' : 'supporters';
+            counterElement.text(`${displayCount} ${plural}`);
+        }
+
+        // Handle button clicks
         function handlePayment(side) {
-            // PayPal.me links - you'll need to replace these with your actual PayPal.me URLs
-            const paypalLinks = {
-                'usa': 'https://www.paypal.com/paypalme/YourPayPalUSA', // Replace with your PayPal.me link
-                'denmark': 'https://www.paypal.com/paypalme/YourPayPalDenmark' // Replace with your PayPal.me link
+            // Get current count from localStorage
+            let count = parseInt(localStorage.getItem(`counter-${side}`) || 0);
+
+            // Increment counter
+            count++;
+
+            // Save to localStorage
+            localStorage.setItem(`counter-${side}`, count);
+
+            // Update display
+            updateCounterDisplay(side, count);
+
+            // Show thank you message
+            const messages = {
+                'usa': 'Thank you for your support! 🇺🇸',
+                'greenland': 'Thank you for your support! 🇬🇱',
+                'denmark': 'Thank you for your support! 🇩🇰'
             };
 
-            // For demo purposes, show an alert. In production, uncomment the line below to redirect to PayPal
-            if (side === 'usa') {
-                alert('Thank you for supporting the USA acquisition of Greenland! 🇺🇸\n\nNote: Replace the PayPal.me link in the code with your actual PayPal.me URL.');
-            } else {
-                alert('Thank you for supporting Danish sovereignty over Greenland! 🇩🇰\n\nNote: Replace the PayPal.me link in the code with your actual PayPal.me URL.');
-            }
-
-            // Uncomment this line and add your PayPal.me links above to enable actual payments:
-            // window.open(paypalLinks[side], '_blank');
+            alert(messages[side]);
         }
 
         // Run on page load
         $(document).ready(function() {
             checkGreenlandStatus();
+            initializeCounters();
         });
     </script>
 </body>
