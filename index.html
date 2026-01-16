@@ -20,9 +20,10 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
             min-height: 100vh;
             margin: 0;
+            padding: 20px 10px;
             background:
                 linear-gradient(135deg,
                     rgba(60, 59, 110, 0.4) 0%,
@@ -31,8 +32,8 @@
                     rgba(255, 255, 255, 0.3) 75%,
                     rgba(192, 12, 48, 0.4) 100%
                 );
+            background-attachment: fixed;
             position: relative;
-            overflow: hidden;
         }
         body::before {
             content: '🦅';
@@ -218,6 +219,65 @@
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px 5px;
+            }
+            body::before {
+                font-size: 200px;
+                top: -30px;
+                left: -30px;
+            }
+            body::after {
+                font-size: 250px;
+                bottom: -50px;
+                right: -50px;
+            }
+            .container {
+                padding: 20px;
+                max-width: 100%;
+                width: calc(100% - 10px);
+            }
+            h1 {
+                font-size: 24px;
+            }
+            .subtitle {
+                font-size: 14px;
+            }
+            #result {
+                font-size: 36px;
+                padding: 15px;
+            }
+            #greenland-img {
+                max-width: 100%;
+            }
+            .payment-buttons {
+                flex-direction: column;
+                gap: 15px;
+            }
+            .payment-btn {
+                width: 100%;
+                max-width: 100%;
+                min-width: auto;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 20px;
+            }
+            #result {
+                font-size: 28px;
+            }
+            .payment-btn-title {
+                font-size: 16px;
+            }
+            .payment-btn-icon {
+                font-size: 28px;
+            }
         }
     </style>
 </head>
