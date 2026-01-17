@@ -20,19 +20,49 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
             min-height: 100vh;
             margin: 0;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px 10px;
+            background:
+                linear-gradient(135deg,
+                    rgba(255, 255, 255, 0.7) 0%,
+                    rgba(255, 255, 255, 0.5) 50%,
+                    rgba(255, 255, 255, 0.7) 100%
+                ),
+                url('pngtree-greenland-map-borders-png-image_9207977.png');
+            background-size: auto, auto;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat, repeat;
+            position: relative;
+        }
+        #full-page-flag-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.15;
+            z-index: 0;
+            pointer-events: none;
+            display: none;
         }
         .container {
-            background: white;
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 15px 50px rgba(0,0,0,0.3);
             text-align: center;
-            max-width: 650px;
+            max-width: 975px;
             animation: containerFadeIn 0.6s ease-out;
+            position: relative;
+            z-index: 1;
+            padding: 20px;
+        }
+        .content-section {
+            background: rgba(255, 255, 255, 0.85);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            backdrop-filter: blur(10px);
         }
         @keyframes containerFadeIn {
             from { opacity: 0; transform: translateY(20px); }
@@ -69,37 +99,6 @@
             margin: 10px 0;
             font-style: italic;
         }
-        #greenland-map {
-            margin: 20px 0;
-            max-width: 100%;
-            height: auto;
-            position: relative;
-        }
-        #map-container {
-            position: relative;
-            display: inline-block;
-            margin: 20px 0;
-        }
-        #greenland-img {
-            max-width: 450px;
-            height: auto;
-            display: block;
-            filter: drop-shadow(3px 3px 10px rgba(0,0,0,0.2));
-        }
-        #flag-overlay {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            opacity: 0.95;
-            transition: all 0.3s;
-            pointer-events: none;
-            animation: flagPulse 2s ease-in-out infinite;
-        }
-        @keyframes flagPulse {
-            0%, 100% { transform: translate(-50%, -50%) scale(1); }
-            50% { transform: translate(-50%, -50%) scale(1.05); }
-        }
         #result {
             animation: resultAppear 0.5s ease-out;
         }
@@ -111,10 +110,39 @@
             min-height: 30px;
             transition: all 0.3s ease;
         }
+        .revenue-counter {
+            background: rgba(231, 76, 60, 0.9);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            backdrop-filter: blur(10px);
+        }
+        .revenue-counter h3 {
+            margin: 0 0 8px 0;
+            font-size: 14px;
+            font-weight: normal;
+            opacity: 0.95;
+        }
+        .revenue-amount {
+            font-size: 28px;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+            margin: 8px 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .revenue-subtitle {
+            font-size: 11px;
+            opacity: 0.9;
+            font-style: italic;
+        }
         .payment-section {
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 2px solid #eee;
+            background: rgba(255, 255, 255, 0.85);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            backdrop-filter: blur(10px);
         }
         .payment-buttons {
             display: flex;
@@ -165,14 +193,6 @@
             font-size: 12px;
             opacity: 0.9;
         }
-        .payment-btn-counter {
-            margin-top: 8px;
-            font-size: 14px;
-            font-weight: bold;
-            padding: 5px 10px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 15px;
-        }
         .loading {
             display: inline-block;
             width: 20px;
@@ -186,40 +206,108 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px 5px;
+            }
+            .container {
+                padding: 10px;
+                max-width: 100%;
+                width: calc(100% - 10px);
+            }
+            .content-section, .payment-section {
+                padding: 20px;
+            }
+            h1 {
+                font-size: 24px;
+            }
+            .subtitle {
+                font-size: 14px;
+            }
+            #result {
+                font-size: 36px;
+                padding: 15px;
+            }
+            .revenue-amount {
+                font-size: 24px;
+            }
+            .revenue-counter h3 {
+                font-size: 13px;
+            }
+            .payment-buttons {
+                flex-direction: column;
+                gap: 15px;
+            }
+            .payment-btn {
+                width: 100%;
+                max-width: 100%;
+                min-width: auto;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .content-section, .payment-section, .revenue-counter {
+                padding: 15px;
+            }
+            h1 {
+                font-size: 20px;
+            }
+            #result {
+                font-size: 28px;
+            }
+            .revenue-amount {
+                font-size: 20px;
+            }
+            .revenue-counter h3 {
+                font-size: 12px;
+            }
+            .payment-btn-title {
+                font-size: 16px;
+            }
+            .payment-btn-icon {
+                font-size: 28px;
+            }
+        }
     </style>
 </head>
 <body>
+    <div id="full-page-flag-overlay"></div>
     <div class="container">
-        <h1>🌍 Is Greenland part of the USA?</h1>
-        <p class="subtitle">Checking if Greenland is part of the USA or Denmark...</p>
-        <div id="status"><div class="loading"></div> <span id="status-text">Consulting the polar bears...</span></div>
-        <div id="result"></div>
-        <div id="map-container">
-            <img id="greenland-img" src="pngtree-greenland-map-borders-png-image_9207977.png" alt="Greenland Map">
-            <div id="flag-overlay"></div>
+        <div class="content-section">
+            <h1>🌍 Is Greenland part of the USA?</h1>
+            <p class="subtitle">Checking if Greenland is part of the USA or Denmark...</p>
+            <div id="status"><div class="loading"></div> <span id="status-text">Consulting the polar bears...</span></div>
+            <div id="result"></div>
+        </div>
+
+        <div id="revenue-counter-container" style="display: none;">
+            <div class="revenue-counter">
+                <h3 id="revenue-title">Revenue Lost in 2026</h3>
+                <div class="revenue-amount" id="revenue-amount">$0.00</div>
+                <div class="revenue-subtitle">Based on Greenland's GDP of $3.33 billion/year</div>
+            </div>
         </div>
 
         <div class="payment-section">
             <h3 style="color: #333; margin-bottom: 10px;">Support Your Side</h3>
             <p style="color: #666; font-size: 14px;">Choose which cause you believe in</p>
             <div class="payment-buttons">
-                <a href="#" class="payment-btn payment-btn-usa" onclick="handlePayment('usa'); return false;">
+                <a href="https://whoownsgreenland.tpopsite.com/" class="payment-btn payment-btn-usa" target="_blank">
                     <div class="payment-btn-icon">🇺🇸</div>
-                    <div class="payment-btn-title">Support USA Acquisition</div>
+                    <div class="payment-btn-title">USA Acquisition</div>
                     <div class="payment-btn-subtitle">Help fund the American dream</div>
-                    <div class="payment-btn-counter" id="counter-usa">0 supporters</div>
                 </a>
-                <a href="#" class="payment-btn payment-btn-greenland" onclick="handlePayment('greenland'); return false;">
+                <a href="https://whoownsgreenland.tpopsite.com/" class="payment-btn payment-btn-greenland" target="_blank">
                     <div class="payment-btn-icon">🇬🇱</div>
-                    <div class="payment-btn-title">Greenland Independence</div>
+                    <div class="payment-btn-title">Greenlandic Independence</div>
                     <div class="payment-btn-subtitle">Support true self-determination</div>
-                    <div class="payment-btn-counter" id="counter-greenland">0 supporters</div>
                 </a>
-                <a href="#" class="payment-btn payment-btn-denmark" onclick="handlePayment('denmark'); return false;">
+                <a href="https://whoownsgreenland.tpopsite.com/" class="payment-btn payment-btn-denmark" target="_blank">
                     <div class="payment-btn-icon">🇩🇰</div>
-                    <div class="payment-btn-title">Support Danish Sovereignty</div>
+                    <div class="payment-btn-title">Danish Sovereignty</div>
                     <div class="payment-btn-subtitle">Defend Greenland's autonomy</div>
-                    <div class="payment-btn-counter" id="counter-denmark">0 supporters</div>
                 </a>
             </div>
         </div>
@@ -332,6 +420,72 @@
             `;
         }
 
+        // Function to create full-page USA flag HTML
+        function createUSAFlagFullPage() {
+            return `
+                <svg width="100%" height="100%" viewBox="0 0 1900 1000" preserveAspectRatio="xMidYMid slice">
+                    <!-- Red stripes -->
+                    <rect x="0" y="0" width="1900" height="76.92" fill="#B22234"/>
+                    <rect x="0" y="153.85" width="1900" height="76.92" fill="#B22234"/>
+                    <rect x="0" y="307.69" width="1900" height="76.92" fill="#B22234"/>
+                    <rect x="0" y="461.54" width="1900" height="76.92" fill="#B22234"/>
+                    <rect x="0" y="615.38" width="1900" height="76.92" fill="#B22234"/>
+                    <rect x="0" y="769.23" width="1900" height="76.92" fill="#B22234"/>
+                    <rect x="0" y="923.08" width="1900" height="76.92" fill="#B22234"/>
+
+                    <!-- White stripes -->
+                    <rect x="0" y="76.92" width="1900" height="76.92" fill="white"/>
+                    <rect x="0" y="230.77" width="1900" height="76.92" fill="white"/>
+                    <rect x="0" y="384.62" width="1900" height="76.92" fill="white"/>
+                    <rect x="0" y="538.46" width="1900" height="76.92" fill="white"/>
+                    <rect x="0" y="692.31" width="1900" height="76.92" fill="white"/>
+                    <rect x="0" y="846.15" width="1900" height="76.92" fill="white"/>
+
+                    <!-- Blue canton -->
+                    <rect x="0" y="0" width="760" height="538.46" fill="#3C3B6E"/>
+
+                    <!-- Stars -->
+                    ${generateStarsFullPage()}
+                </svg>
+            `;
+        }
+
+        // Generate stars for full-page USA flag
+        function generateStarsFullPage() {
+            let stars = '';
+            const rows = [6, 5, 6, 5, 6, 5, 6, 5, 6];
+            let y = 40;
+
+            rows.forEach((count, rowIndex) => {
+                const startX = count === 6 ? 50 : 75;
+                const spacing = count === 6 ? 120 : 135;
+
+                for (let i = 0; i < count; i++) {
+                    const x = startX + (i * spacing);
+                    stars += `<circle cx="${x}" cy="${y}" r="20" fill="white"/>`;
+                }
+                y += 60;
+            });
+
+            return stars;
+        }
+
+        // Function to create full-page Danish flag HTML
+        function createDanishFlagFullPage() {
+            return `
+                <svg width="100%" height="100%" viewBox="0 0 370 280" preserveAspectRatio="xMidYMid slice">
+                    <!-- Red background -->
+                    <rect x="0" y="0" width="370" height="280" fill="#C60C30"/>
+
+                    <!-- White cross - vertical -->
+                    <rect x="120" y="0" width="40" height="280" fill="white"/>
+
+                    <!-- White cross - horizontal -->
+                    <rect x="0" y="120" width="370" height="40" fill="white"/>
+                </svg>
+            `;
+        }
+
         // Function to check Greenland status
         function checkGreenlandStatus() {
             // Start funny messages
@@ -412,65 +566,89 @@
 
             const resultDiv = $('#result');
             const statusDiv = $('#status');
-            const flagOverlay = $('#flag-overlay');
+            const flagOverlay = $('#full-page-flag-overlay');
 
             if (isUSA) {
                 resultDiv.text('YES').addClass('yes');
-                flagOverlay.html(createUSAFlag());
+                flagOverlay.html(createUSAFlagFullPage());
+                flagOverlay.fadeIn(800);
+                startRevenueCounter(true); // YES - show Denmark's loss since annexation
             } else {
                 resultDiv.text('NO').addClass('no');
-                flagOverlay.html(createDanishFlag());
+                flagOverlay.html(createDanishFlagFullPage());
+                flagOverlay.fadeIn(800);
+                startRevenueCounter(false); // NO - show USA's loss since 2026
             }
 
             // Hide loading spinner and update status
             statusDiv.html(statusText);
         }
 
-        // Initialize counters from localStorage
-        function initializeCounters() {
-            const sides = ['usa', 'greenland', 'denmark'];
-            sides.forEach(side => {
-                const count = localStorage.getItem(`counter-${side}`) || 0;
-                updateCounterDisplay(side, count);
-            });
-        }
+        // Revenue counter logic
+        let revenueInterval;
+        const GREENLAND_GDP = 3330000000; // $3.33 billion (2023 data)
+        const SECONDS_PER_YEAR = 365.25 * 24 * 60 * 60; // 31,557,600 seconds
+        const GDP_PER_SECOND = GREENLAND_GDP / SECONDS_PER_YEAR; // ~$105.52/second
 
-        // Update counter display
-        function updateCounterDisplay(side, count) {
-            const counterElement = $(`#counter-${side}`);
-            const displayCount = parseInt(count);
-            const plural = displayCount === 1 ? 'supporter' : 'supporters';
-            counterElement.text(`${displayCount} ${plural}`);
-        }
+        function startRevenueCounter(isUSA) {
+            // Show the revenue counter
+            $('#revenue-counter-container').fadeIn(500);
 
-        // Handle button clicks
-        function handlePayment(side) {
-            // Get current count from localStorage
-            let count = parseInt(localStorage.getItem(`counter-${side}`) || 0);
+            // Set background color based on which country doesn't own Greenland
+            const revenueBox = $('.revenue-counter');
+            if (isUSA) {
+                // USA owns Greenland, so Denmark is missing out
+                // Use Danish flag color (red)
+                revenueBox.css('background', 'rgba(198, 12, 48, 0.9)'); // Danish red
+            } else {
+                // Denmark owns Greenland, so USA is missing out
+                // Use USA flag colors (red and blue gradient)
+                revenueBox.css('background', 'linear-gradient(135deg, rgba(178, 34, 52, 0.9) 0%, rgba(60, 59, 110, 0.9) 100%)');
+            }
 
-            // Increment counter
-            count++;
+            // Calculate and update the counter
+            function updateCounter() {
+                const now = new Date();
+                let startDate, titleText;
 
-            // Save to localStorage
-            localStorage.setItem(`counter-${side}`, count);
+                if (isUSA) {
+                    // If Greenland is part of USA, assume annexation on Jan 1, 2026
+                    startDate = new Date('2026-01-01T00:00:00Z');
+                    titleText = 'Revenue Denmark Lost Since Annexation';
+                } else {
+                    // If Greenland is NOT part of USA, count from Jan 1, 2026
+                    startDate = new Date('2026-01-01T00:00:00Z');
+                    titleText = 'Revenue USA is Missing Out on in 2026';
+                }
 
-            // Update display
-            updateCounterDisplay(side, count);
+                // Update the title
+                $('#revenue-title').text(titleText);
 
-            // Show thank you message
-            const messages = {
-                'usa': 'Thank you for your support! 🇺🇸',
-                'greenland': 'Thank you for your support! 🇬🇱',
-                'denmark': 'Thank you for your support! 🇩🇰'
-            };
+                // Calculate seconds elapsed
+                const secondsElapsed = Math.max(0, (now - startDate) / 1000);
 
-            alert(messages[side]);
+                // Calculate total revenue lost
+                const revenueLost = secondsElapsed * GDP_PER_SECOND;
+
+                // Format as currency
+                const formatted = '$' + revenueLost.toLocaleString('en-US', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                });
+
+                $('#revenue-amount').text(formatted);
+            }
+
+            // Update immediately
+            updateCounter();
+
+            // Update every second
+            revenueInterval = setInterval(updateCounter, 1000);
         }
 
         // Run on page load
         $(document).ready(function() {
             checkGreenlandStatus();
-            initializeCounters();
         });
     </script>
 </body>
