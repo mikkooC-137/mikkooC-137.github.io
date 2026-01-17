@@ -1,0 +1,29 @@
+# robots.txt for isgreenlandpartoftheusa.com
+
+User-agent: *
+Allow: /
+
+# Disallow crawling of analytics and tracking scripts
+Disallow: /gtag/
+
+# Sitemap location
+Sitemap: https://isgreenlandpartoftheusa.com/sitemap.xml
+
+# Popular search engine bots - allow everything
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+User-agent: Baiduspider
+Allow: /
+
+User-agent: YandexBot
+Allow: /

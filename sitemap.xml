@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <url>
+    <loc>https://isgreenlandpartoftheusa.com/</loc>
+    <lastmod>2026-01-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://isgreenlandpartoftheusa.com/greenland_trump.png</image:loc>
+      <image:title>Is Greenland Part of the USA - Trump Greenland</image:title>
+      <image:caption>Illustration related to Trump's proposal to buy Greenland from Denmark</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://isgreenlandpartoftheusa.com/greenland_local.png</image:loc>
+      <image:title>Greenland Local Flag</image:title>
+      <image:caption>Greenland flag representing Greenlandic independence and sovereignty</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://isgreenlandpartoftheusa.com/full.png</image:loc>
+      <image:title>Greenland Ownership Illustration</image:title>
+      <image:caption>Illustration showing the relationship between Greenland, USA, and Denmark</image:caption>
+    </image:image>
+  </url>
+</urlset>
