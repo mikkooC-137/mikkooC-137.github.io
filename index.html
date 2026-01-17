@@ -594,6 +594,18 @@
             // Show the revenue counter
             $('#revenue-counter-container').fadeIn(500);
 
+            // Set background color based on which country doesn't own Greenland
+            const revenueBox = $('.revenue-counter');
+            if (isUSA) {
+                // USA owns Greenland, so Denmark is missing out
+                // Use Danish flag color (red)
+                revenueBox.css('background', 'rgba(198, 12, 48, 0.9)'); // Danish red
+            } else {
+                // Denmark owns Greenland, so USA is missing out
+                // Use USA flag colors (red and blue gradient)
+                revenueBox.css('background', 'linear-gradient(135deg, rgba(178, 34, 52, 0.9) 0%, rgba(60, 59, 110, 0.9) 100%)');
+            }
+
             // Calculate and update the counter
             function updateCounter() {
                 const now = new Date();
