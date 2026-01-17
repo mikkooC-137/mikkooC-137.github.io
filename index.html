@@ -153,27 +153,27 @@
         .revenue-counter {
             background: rgba(231, 76, 60, 0.9);
             color: white;
-            padding: 25px;
-            border-radius: 15px;
+            padding: 20px;
+            border-radius: 12px;
             margin: 20px 0;
             box-shadow: 0 8px 25px rgba(0,0,0,0.3);
             backdrop-filter: blur(10px);
         }
         .revenue-counter h3 {
-            margin: 0 0 10px 0;
-            font-size: 18px;
+            margin: 0 0 8px 0;
+            font-size: 14px;
             font-weight: normal;
             opacity: 0.95;
         }
         .revenue-amount {
-            font-size: 42px;
+            font-size: 28px;
             font-weight: bold;
             font-family: 'Courier New', monospace;
-            margin: 10px 0;
+            margin: 8px 0;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
         .revenue-subtitle {
-            font-size: 13px;
+            font-size: 11px;
             opacity: 0.9;
             font-style: italic;
         }
@@ -233,14 +233,6 @@
             font-size: 12px;
             opacity: 0.9;
         }
-        .payment-btn-counter {
-            margin-top: 8px;
-            font-size: 14px;
-            font-weight: bold;
-            padding: 5px 10px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 15px;
-        }
         .loading {
             display: inline-block;
             width: 20px;
@@ -289,10 +281,10 @@
                 padding: 15px;
             }
             .revenue-amount {
-                font-size: 32px;
+                font-size: 24px;
             }
             .revenue-counter h3 {
-                font-size: 16px;
+                font-size: 13px;
             }
             #greenland-img {
                 max-width: 100%;
@@ -319,10 +311,10 @@
                 font-size: 28px;
             }
             .revenue-amount {
-                font-size: 24px;
+                font-size: 20px;
             }
             .revenue-counter h3 {
-                font-size: 14px;
+                font-size: 12px;
             }
             .payment-btn-title {
                 font-size: 16px;
@@ -350,35 +342,32 @@
             </div>
         </div>
 
-        <div class="content-section">
-            <div id="map-container">
-                <img id="greenland-img" src="pngtree-greenland-map-borders-png-image_9207977.png" alt="Greenland Map">
-                <div id="flag-overlay"></div>
-            </div>
-        </div>
-
         <div class="payment-section">
             <h3 style="color: #333; margin-bottom: 10px;">Support Your Side</h3>
             <p style="color: #666; font-size: 14px;">Choose which cause you believe in</p>
             <div class="payment-buttons">
-                <a href="#" class="payment-btn payment-btn-usa" onclick="handlePayment('usa'); return false;">
+                <a href="https://whoownsgreenland.tpopsite.com/" class="payment-btn payment-btn-usa" target="_blank">
                     <div class="payment-btn-icon">🇺🇸</div>
                     <div class="payment-btn-title">USA Acquisition</div>
                     <div class="payment-btn-subtitle">Help fund the American dream</div>
-                    <div class="payment-btn-counter" id="counter-usa">0 supporters</div>
                 </a>
-                <a href="#" class="payment-btn payment-btn-greenland" onclick="handlePayment('greenland'); return false;">
+                <a href="https://whoownsgreenland.tpopsite.com/" class="payment-btn payment-btn-greenland" target="_blank">
                     <div class="payment-btn-icon">🇬🇱</div>
                     <div class="payment-btn-title">Greenlandic Independence</div>
                     <div class="payment-btn-subtitle">Support true self-determination</div>
-                    <div class="payment-btn-counter" id="counter-greenland">0 supporters</div>
                 </a>
-                <a href="#" class="payment-btn payment-btn-denmark" onclick="handlePayment('denmark'); return false;">
+                <a href="https://whoownsgreenland.tpopsite.com/" class="payment-btn payment-btn-denmark" target="_blank">
                     <div class="payment-btn-icon">🇩🇰</div>
                     <div class="payment-btn-title">Danish Sovereignty</div>
                     <div class="payment-btn-subtitle">Defend Greenland's autonomy</div>
-                    <div class="payment-btn-counter" id="counter-denmark">0 supporters</div>
                 </a>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <div id="map-container">
+                <img id="greenland-img" src="pngtree-greenland-map-borders-png-image_9207977.png" alt="Greenland Map">
+                <div id="flag-overlay"></div>
             </div>
         </div>
 
@@ -575,11 +564,11 @@
             if (isUSA) {
                 resultDiv.text('YES').addClass('yes');
                 flagOverlay.html(createUSAFlag());
-                startRevenueCounter('Denmark');
+                startRevenueCounter(true); // YES - show Denmark's loss since annexation
             } else {
                 resultDiv.text('NO').addClass('no');
                 flagOverlay.html(createDanishFlag());
-                startRevenueCounter('USA');
+                startRevenueCounter(false); // NO - show USA's loss since 2026
             }
 
             // Hide loading spinner and update status
@@ -592,18 +581,27 @@
         const SECONDS_PER_YEAR = 365.25 * 24 * 60 * 60; // 31,557,600 seconds
         const GDP_PER_SECOND = GREENLAND_GDP / SECONDS_PER_YEAR; // ~$105.52/second
 
-        function startRevenueCounter(countryName) {
+        function startRevenueCounter(isUSA) {
             // Show the revenue counter
             $('#revenue-counter-container').fadeIn(500);
 
-            // Update the title
-            $('#revenue-title').text(`Revenue ${countryName} is Missing Out on in 2026`);
-
             // Calculate and update the counter
             function updateCounter() {
-                // January 1, 2026, 00:00:00 UTC
-                const startDate = new Date('2026-01-01T00:00:00Z');
                 const now = new Date();
+                let startDate, titleText;
+
+                if (isUSA) {
+                    // If Greenland is part of USA, assume annexation on Jan 1, 2026
+                    startDate = new Date('2026-01-01T00:00:00Z');
+                    titleText = 'Revenue Denmark Lost Since Annexation';
+                } else {
+                    // If Greenland is NOT part of USA, count from Jan 1, 2026
+                    startDate = new Date('2026-01-01T00:00:00Z');
+                    titleText = 'Revenue USA is Missing Out on in 2026';
+                }
+
+                // Update the title
+                $('#revenue-title').text(titleText);
 
                 // Calculate seconds elapsed
                 const secondsElapsed = Math.max(0, (now - startDate) / 1000);
@@ -627,51 +625,9 @@
             revenueInterval = setInterval(updateCounter, 1000);
         }
 
-        // Initialize counters from localStorage
-        function initializeCounters() {
-            const sides = ['usa', 'greenland', 'denmark'];
-            sides.forEach(side => {
-                const count = localStorage.getItem(`counter-${side}`) || 0;
-                updateCounterDisplay(side, count);
-            });
-        }
-
-        // Update counter display
-        function updateCounterDisplay(side, count) {
-            const counterElement = $(`#counter-${side}`);
-            const displayCount = parseInt(count);
-            const plural = displayCount === 1 ? 'supporter' : 'supporters';
-            counterElement.text(`${displayCount} ${plural}`);
-        }
-
-        // Handle button clicks
-        function handlePayment(side) {
-            // Get current count from localStorage
-            let count = parseInt(localStorage.getItem(`counter-${side}`) || 0);
-
-            // Increment counter
-            count++;
-
-            // Save to localStorage
-            localStorage.setItem(`counter-${side}`, count);
-
-            // Update display
-            updateCounterDisplay(side, count);
-
-            // Show thank you message
-            const messages = {
-                'usa': 'Thank you for your support! 🇺🇸',
-                'greenland': 'Thank you for your support! 🇬🇱',
-                'denmark': 'Thank you for your support! 🇩🇰'
-            };
-
-            alert(messages[side]);
-        }
-
         // Run on page load
         $(document).ready(function() {
             checkGreenlandStatus();
-            initializeCounters();
         });
     </script>
 </body>
